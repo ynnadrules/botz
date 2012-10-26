@@ -1,5 +1,6 @@
 require 'json' 
-
+require 'game/card'
+require 'game/hand'
 class Logic
 
   attr_accessor :num_players, :scenario, :play, :my_move, :min_bet, :my_hand, :ante, :stack
@@ -12,10 +13,11 @@ class Logic
 #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! Main Method !!!!!!!!!!!!!!!!!!!!!!!!!!!!!1
   def execute (params) 
     # initalizing data
-    @min_bet = params[:minimum_bet]
-    @stack = params[:initial_stack]
-    init_my_move()
-    init_hand(params[:hand])
+    @min_bet = params['minimum_bet']
+    @stack = params['initial_stack']
+
+    init_my_move
+    init_hand(params['hand'])
 
     # Set scenario
     init_scenario(params)
@@ -36,7 +38,7 @@ class Logic
   end
 
   def init_scenario( params )
-    num_players = params[:players_at_table].size
+    num_players = params['players_at_table'].size
     if num_players > 3 then 
       #Scenario 1
       scenario = 1
@@ -48,11 +50,12 @@ class Logic
     else 
       scenario = 3
       # one_on_one
-     end
+    end
   end
 
   def init_hand( hand )
-    #my_hand = Card.initalize(hand)
+
+    my_hand = Hand.new( hand )
   end
     
 #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! Logic !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1
@@ -64,7 +67,7 @@ class Logic
     flush = 0
 
     # for now be conservative
-    @play = 5
+    @play = 1
 
     # check for pairs
 
@@ -82,16 +85,16 @@ class Logic
   end
 
   def determine_move(params)
-    if params[:betting_phase] == "deal" # betting state
+    if params['betting_phase'] == "deal" # betting state
       if !my_bet  
         @action = "fold"
       else
         @action = "bet"
       end
-    elsif params[:betting_phase] == "draw" # return cards 
+    elsif params['betting_phase'] == "draw" # return cards 
       discard = to_discard
-    elsif params[:betting_phase] == "post_draw" # betting state 
-      bet = my_bet
+    elsif params['betting_phase'] == "post_draw" # betting state 
+      my_bet
 
     end
 
@@ -132,9 +135,3 @@ class Logic
 
 end
 
-# test code
-logic = Logic.new
-params = {:initial_stack => 1000, :my_hand => ["2S", "TH", "AH", "AD", "2D"], :betting_phase => "deal", :minimum_bet => 10, :players_at_table => [{:name => "joe"},{:name => "marry"}] }
-
-my_move = logic.execute(params)
-puts my_move

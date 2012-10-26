@@ -4,19 +4,18 @@ $:.unshift(File.dirname(__FILE__) + '/lib') unless $LOAD_PATH.include?(File.dirn
 
 require 'pry'
 require 'bot'
+require 'logic'
 
 Botz::Bot.configure do |b|
 
   b.base_uri b.api_endpoint
 
-  b.player_key = "ae3a9fdf-2248-4a48-8aac-49c47fcf849a"
+  b.player_key = "22e44c2c-b4ed-4354-95a2-e83727f91d1e"
 
 end
 
 Botz::Bot.play do
-  #move = Logic.execute game_state
-
-  move = { action_name: 'bet', amount: 100, cards: nil }
+  move = Logic.new.execute game_state
 
   make_play move
 end

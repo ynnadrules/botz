@@ -20,9 +20,8 @@ module Botz
 
           if b.is_my_turn?
             puts "You are playing now."
-            b.instance_eval( &block )
+            b.instance_exec( &block )
           end
-
           
           puts "."
 
@@ -70,9 +69,7 @@ module Botz
 
     def is_my_turn?
       puts game_state.inspect
-      unless game_state.nil?
-        game_state[:your_turn]
-      end
+      @game_state["your_turn"] == true
     end
 
   end
