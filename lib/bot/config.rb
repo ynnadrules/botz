@@ -12,7 +12,7 @@ module Bot
 
     SANDBOX_PLAYER_KEY = ""
 
-    TEST_ENDPOINT = "http://no-limit-code-em.com/sandbox"
+    SANDBOX_ENDPOINT = "http://no-limit-code-em.com/sandbox"
 
     TEST_PLAYER_KEYS = {
       bet: "",  # use this to get a game state where you must respond with a bet

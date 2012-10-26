@@ -5,8 +5,6 @@ class Bot
   extend Configuration
   include HTTParty
 
-  base_uri Configuration::TEST_ENDPOINT
-
   def initialize
 
   end

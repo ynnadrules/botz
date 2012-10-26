@@ -2,8 +2,11 @@
 
 $:.unshift(File.dirname(__FILE__) + '/lib') unless $LOAD_PATH.include?(File.dirname(__FILE__) + '/lib')
 
+require 'pry'
 require 'bot'
 
 Bot.configure do |b|
-
+  b.base_uri = Bot::SANDBOX_ENDPOINT
 end
+
+binding.pry
