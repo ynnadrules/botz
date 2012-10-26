@@ -1,5 +1,5 @@
-require 'bot/config'
-require 'bot/bot'
+require 'botz/config'
+require 'botz/bot'
 
-module Bot
+module Botz
 end

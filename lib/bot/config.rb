@@ -1,4 +1,4 @@
-module Bot
+module Botz
   module Configuration
 
     VALID_KEYS = [
