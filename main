@@ -5,8 +5,20 @@ $:.unshift(File.dirname(__FILE__) + '/lib') unless $LOAD_PATH.include?(File.dirn
 require 'pry'
 require 'bot'
 
-Bot.configure do |b|
-  b.base_uri = Bot::SANDBOX_ENDPOINT
+Botz::Bot.configure do |b|
+
+  b.base_uri b.api_endpoint
+
+  b.player_key = "ae14f3e8-62de-4a89-91fb-8cac42ac974f"
+
 end
 
-binding.pry
+Botz::Bot.play do
+  #move = Logic.execute game_state
+
+  move = { action_name: 'bet', amount: 100, cards: nil }
+
+  make_play move
+end
+
+

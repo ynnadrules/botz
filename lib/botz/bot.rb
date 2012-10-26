@@ -6,23 +6,73 @@ module Botz
     extend Configuration
     include HTTParty
 
-    def initialize
+    attr_accessor :game_state
+
+    VALID_ACTIONS = [ :bet, :fold, :replace ]
+
+
+    class << self
+
+      def play( &block )
+        b = self.new
+        loop {
+          b.get_game_state
+
+          if b.is_my_turn?
+            puts "You are playing now."
+            b.instance_eval( &block )
+          end
+
+          
+          puts "."
+
+          sleep 1
+        }
+      end
 
     end
 
+
+    def initialize
+      @game_state = nil
+    end
+
     def get_game_state
-      response = self.class.get "/players/#{PLAYER_KEY}"
+      response = self.class.get "/players/#{Bot.player_key}"
 
       @game_state = JSON.parse response.body
 
       @game_state
     end
 
-    def make_play( move, params = {} )
+    def make_play( params )
 
-      response = self.class.post "/players/#{PLAYER_KEY}/#{move}", body: params
+      return nil unless VALID_ACTIONS.include?( params[:action_name].to_sym )
 
-      @game_state = JSON.parse response.body
+      play = {
+        action_name: nil,
+        amount: nil,
+        cards: nil
+      }
+
+      play.merge!( params )
+
+      puts "Making play"
+
+      response = Bot.post "/players/#{Bot.player_key}/action", query: play
+
+      if response.code == 200
+        @game_state = JSON.parse response.body
+      else
+        return nil
+      end
+    end
+
+    def is_my_turn?
+      puts game_state.inspect
+      unless game_state.nil?
+        game_state[:your_turn]
+      end
     end
 
   end
