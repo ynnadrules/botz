@@ -9,7 +9,7 @@ Botz::Bot.configure do |b|
 
   b.base_uri b.api_endpoint
 
-  b.player_key = "ae14f3e8-62de-4a89-91fb-8cac42ac974f"
+  b.player_key = "ae3a9fdf-2248-4a48-8aac-49c47fcf849a"
 
 end
 
