@@ -46,7 +46,7 @@ module Botz
 
     def make_play( params )
 
-      return nil unless VALID_ACTIONS.include?( params[:action_name].to_sym )
+      
 
       play = {
         action_name: nil,

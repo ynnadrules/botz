@@ -13,4 +13,8 @@ class Hand
     @cards[key]
   end
 
+  def size
+    @cards.length
+  end
+
 end

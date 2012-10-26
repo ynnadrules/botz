@@ -11,13 +11,22 @@ class Logic
 #     3 : aggressive
 
 #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! Main Method !!!!!!!!!!!!!!!!!!!!!!!!!!!!!1
-  def execute (params) 
+  class << self
+    def execute( params )
+      l = self.new params
+      l.my_move
+    end
+  end
+
+  def initialize( params ) 
     # initalizing data
     @min_bet = params['minimum_bet']
     @stack = params['initial_stack']
+    @hand = params['hand']
+    @number_of_players = params['players_at_table'].length
 
     init_my_move
-    init_hand(params['hand'])
+    init_hand
 
     # Set scenario
     init_scenario(params)
@@ -27,8 +36,6 @@ class Logic
 
     # load values into my_hand
     determine_move(params)
-
-    return @my_move
   end
 
 # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! Initalizations !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -38,12 +45,12 @@ class Logic
   end
 
   def init_scenario( params )
-    num_players = params['players_at_table'].size
-    if num_players > 3 then 
+
+    if @number_of_players > 3 then 
       #Scenario 1
       scenario = 1
     
-    elsif num_players == 3 || num_players == 2 then 
+    elsif @number_of_players == 3 || @number_of_players == 2 then 
       scenario = 2
       # scenario 2
     
@@ -53,9 +60,8 @@ class Logic
     end
   end
 
-  def init_hand( hand )
-
-    my_hand = Hand.new( hand )
+  def init_hand
+    @hand = Hand.new( @hand )
   end
     
 #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! Logic !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1
@@ -67,9 +73,10 @@ class Logic
     flush = 0
 
     # for now be conservative
-    @play = 1
+    @play = 3
 
     # check for pairs
+
 
     # check for flush
 
@@ -85,22 +92,20 @@ class Logic
   end
 
   def determine_move(params)
-    if params['betting_phase'] == "deal" # betting state
-      if !my_bet  
-        @action = "fold"
-      else
-        @action = "bet"
-      end
-    elsif params['betting_phase'] == "draw" # return cards 
-      discard = to_discard
-    elsif params['betting_phase'] == "post_draw" # betting state 
-      my_bet
 
-    end
+    case params['betting_phase']
+    when :deal # betting state
+      if !my_bet  
+        @action = :fold
+      else
+        @action = :bet
+      end
+    when :post_draw # betting state 
+      @my_move[:amount] = my_bet
+    end 
 
     @my_move[:action_name] = @action
-    @my_move[:amount] = my_bet
-    @my_move[:cards] = discard
+    @my_move[:cards] = nil
     
   end
 
@@ -126,11 +131,6 @@ class Logic
     when 5 then @min_bet + ( 2 * @min_bet)
     when 6 then @stack
     end
-  end
-
-
-  def to_discard 
-    "Ac 5s"
   end
 
 end

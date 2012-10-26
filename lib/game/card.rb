@@ -1,7 +1,7 @@
 require 'pry'
 class Card
 
-  attr_accessor :value, :face
+  attr_accessor :value, :face, :code
 
   JACK = 11
   QUEEN = 12
@@ -32,14 +32,15 @@ class Card
 
 
   def initialize( code )
-    map_code code.split('')
+    @code = code
+    map_code @code.split('')
   end
 
   def suit
     @suit
   end
 
-  def to_s
+  def name
     "#{@face} of #{@suit.to_s.capitalize}s"
   end
 
@@ -54,7 +55,12 @@ class Card
       @value = @face.to_i
     else
       @value = FACE_MAP[face.downcase.to_sym]
-      @face = REVERSE_FACE_MAP[@value] if @value > 10
+      case @value
+      when 10
+        @face = '10'
+      else
+        @face = REVERSE_FACE_MAP[@value] 
+      end
     end
 
     @suit = SUIT_MAP[@suit.downcase.to_sym]
